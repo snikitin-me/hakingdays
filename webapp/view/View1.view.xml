@@ -1,0 +1,173 @@
+<mvc:View
+	controllerName="hackingdays.controller.View1" 
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.suite.ui.commons"
+	displayBlock="true"
+	xmlns:m="sap.m"
+	xmlns:mc="sap.suite.ui.microchart"
+	xmlns:layout="sap.ui.layout"
+	>
+	<m:App>
+		<m:pages>
+	<m:Page title="Система прогнозирования аварийных ситуаций"
+		showNavButton="true"
+		navButtonPress="onNavButtonPressed"
+		backgroundDesign="Solid">
+		<m:content>
+			<m:ObjectHeader
+				responsive="true"
+				title="{
+					parts: [
+						'i18n>processFlowChartsTitle',
+						'business>/year'
+					],
+					formatter: 'jQuery.sap.formatMessage'
+				}">
+				<m:headerContainer>
+				<m:HeaderContainer scrollStep="200" id="header" visible="{/isHeaderVisible}" >
+					<m:FeedContent contentText="Mean absolute percentage error: 0.059889; \n Maximum Confident Horizon: 30" />
+					<!--<m:NumericContent size="S" scale="M" value=" 0.059889" valueColor="Good" indicator="Up" press="press" />-->
+					
+					<m:FeedContent  contentText='fluctuations: AR(36) \n trend: Polynom(time) ' />
+
+					<m:FeedContent  contentText='cycles: "" ' />
+
+					<!--<m:NumericContent size="S" scale="M" value="30" valueColor="Good" indicator="Up" press="press" />-->
+				</m:HeaderContainer>
+				</m:headerContainer>
+			</m:ObjectHeader>
+			<m:Panel>
+    
+    					<layout:Grid defaultSpan="XL6 L6 M6 S12">
+				
+						<!-- Example with absolute and percentage values -->
+						<!--<m:Text text="Прогноз" class="sapUiSmallMargin">-->
+							
+						<!--	<m:layoutData>-->
+						<!--		<layout:GridData span="XL12 L12 M12 S12"/>-->
+						<!--	</m:layoutData>-->
+						<!--</m:Text>-->
+		
+						<m:FlexBox alignItems="Center" class="sapUiSmallMargin">
+							<m:layoutData>
+								<layout:GridData span="XL8 L8 M8 S8"/>
+							</m:layoutData>
+							<m:items>
+								
+						<m:Table
+				id="table"
+				width="auto"
+				mode="SingleSelectMaster"
+				class="sapUiResponsiveMargin"
+				items="{
+					path: '/sensors'
+				}"
+				noDataText="{worklistView>/tableNoDataText}"
+				busyIndicatorDelay="{worklistView>/tableBusyDelay}"
+				growing="true"
+				growingScrollToLoad="true"
+				updateFinished="onUpdateFinished"
+				selectionChange="onSelectionChange"
+				>
+				<m:headerToolbar>
+					<m:Toolbar>
+						<m:Title id="tableHeader" text="Датчики"/>
+						<m:ToolbarSpacer />
+						<m:SearchField
+							id="searchField"
+							tooltip="Поиск"
+							search="onSearch"
+							width="auto">
+						</m:SearchField>
+					</m:Toolbar>
+				</m:headerToolbar>
+
+				<m:columns>
+					<m:Column>
+						<m:Text text="Датчик"/>
+					</m:Column>
+					<m:Column>
+						<m:Text text="Тренд"/>
+					</m:Column>
+					<m:Column>
+						<m:Text text="Текущий показатель"/>
+					</m:Column>
+				</m:columns>
+
+				<m:items>
+					<m:ColumnListItem
+						type="Active"
+						press="onPress">
+						<m:cells>
+							<m:ObjectNumber unit="{name}"/>
+							<m:FlexBox height="70px" width="170px">
+							<!--<mc:LineMicroChart threshold="40" size="Responsive" app:name="line" press="press" leftTopLabel="0M" -->
+							<!--leftBottomLabel="June 1" rightTopLabel="80M" rightBottomLabel="June 30">-->
+                            <mc:LineMicroChart
+                                            showPoints="true"
+                                            threshold="{threshold}"
+                                            color="{color}"
+                                            points="{path: 'points', templateShareable: true}"
+                                            class="sapUiTinyMarginTop">
+                                            <mc:LineMicroChartPoint x="{x}" y="{y}"/>
+                                        </mc:LineMicroChart>
+                            </m:FlexBox>
+                            <m:ObjectIdentifier title="{lastVal} {unit}"/>
+						</m:cells>
+					</m:ColumnListItem>
+				</m:items>
+			</m:Table>
+						
+							</m:items>
+						</m:FlexBox>
+						
+						<m:FlexBox height="20rem" alignItems="Center" class="sapUiSmallMargin">
+							<m:layoutData>
+								<layout:GridData span="XL4 L4 M4 S4"/>
+							</m:layoutData>
+							<m:items>
+								<mc:InteractiveLineChart selectionChanged="selectionChanged" press="press"
+									points="{/forecasts}">
+										<mc:InteractiveLineChartPoint
+											value="{realValue}" 
+											label="" 
+											color="{color}"
+											/>
+								</mc:InteractiveLineChart>
+						
+			                    <!--<mc:InteractiveLineChart selectionChanged="selectionChanged" press="press">-->
+                       <!--                 <mc:points>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="10" label="16:00" color="Error"/>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="20" label="16:10" color="Error"/>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="30" label="16:20" color="Critical"/>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="60" label="16:30" color="Good"/>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="65" label="16:40" color="Good"/>-->
+                       <!--                     <mc:InteractiveLineChartPoint value="70" label="16:50" color="Good"/>-->
+                       <!--                 </mc:points>-->
+                       <!--             </mc:InteractiveLineChart>-->
+                       
+							</m:items>
+						</m:FlexBox>
+
+						
+					</layout:Grid>
+    	
+			
+			
+			</m:Panel>
+		</m:content>
+		<m:footer>
+			<m:Toolbar>
+				<m:ToolbarSpacer/>
+				<m:Text text="{/curValueCounter}"/>
+				<m:InputBase value="1" id="interval"/>
+				<m:Button text="Старт" press="onStart" />
+				<!--<m:Button text="Добавить все" press="onInsertAll" />-->
+				<m:Button text="Обновить прогноз" press="onUpdateForecast" />
+			</m:Toolbar>
+		</m:footer>
+	</m:Page>
+		</m:pages>
+	</m:App>
+</mvc:View>
