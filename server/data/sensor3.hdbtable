@@ -1,0 +1,8 @@
+table.schemaName = "SYSTEM";
+table.tableType = COLUMNSTORE;
+table.columns = [
+ {name = "id"; sqlType = INTEGER; nullable = false;},
+ {name = "time"; sqlType = DATE;  nullable = false; },
+ {name = "value"; sqlType = DECIMAL;  precision = 7; scale= 3; nullable = false; }
+ ];
+

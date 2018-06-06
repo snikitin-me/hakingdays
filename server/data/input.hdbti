@@ -1,0 +1,8 @@
+import =
+        [
+            {
+                hdbtable = "hack.data::input";
+                file = "hack.data:input_random.csv";       
+                header = false;
+            }
+         ];
